@@ -4,6 +4,7 @@ import cors from 'cors';
 import http from 'http';
 import https from 'https';
 import siteRoutes from './routes/site';
+import adminRoutes from './routes/admin';
 import { interceptor } from './middlewares/interceptor';
 
 const server: Application = express();
@@ -14,6 +15,7 @@ server.use(express.json());
 
 server.use(interceptor);
 server.use('/', siteRoutes);
+server.use('/api', adminRoutes);
 
 const runServer = (port: number, server: http.Server) => {
   server.listen(port, () => console.info(`Running port ${port}`));
