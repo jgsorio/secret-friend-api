@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
 import { z } from 'zod';
 import eventService from '@/services/event.service';
+import peopleService from '@/services/people.service';
 
 class EventController {
   all: RequestHandler = async (request: Request, response: Response): Promise<any> => {
@@ -49,6 +50,14 @@ class EventController {
     }
 
     const event = await eventService.update(id, body.data);
+    if (event.status) {
+      const matched = await eventService.doMatch(event.id);
+      if (!matched) {
+        return response.status(500).json({ error: 'Pessoas insuficientes para realizar o sorteio' });
+      }
+    } else {
+      await peopleService.clearMatches(event.id);
+    }
     return response.json(event);
   }
 

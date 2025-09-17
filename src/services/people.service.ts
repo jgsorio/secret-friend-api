@@ -8,10 +8,12 @@ class PeopleService {
   all = async (eventId: string, groupId?: string): Promise<EventPeople[]> => {
     return await prisma.eventPeople.findMany({
       where: {
-        event_id: eventId,
         OR: [
           {
             event_group_id: groupId
+          },
+          {
+            event_id: eventId
           }
         ]
       }
@@ -32,6 +34,15 @@ class PeopleService {
 
   delete = async (id: string): Promise<EventPeople> => {
     return await prisma.eventPeople.delete({ where: { id }});
+  }
+
+  clearMatches = async (eventId: string): Promise<boolean> => {
+    try {
+      await prisma.eventPeople.updateMany({ where: { event_id: eventId}, data: { matched: '' }});
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
 
