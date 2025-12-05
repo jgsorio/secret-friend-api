@@ -9,16 +9,9 @@ class GroupService {
     return await prisma.eventGroup.findMany({ where: { event_id: eventId }});
   }
 
-  show = async (id: string, eventId?: string): Promise<EventGroup> => {
+  show = async (id: string): Promise<EventGroup> => {
     return await prisma.eventGroup.findFirst({
-      where: {
-        id: id,
-        OR: [
-          {
-            event_id: eventId
-          }
-        ]
-      }
+      where: { id: id }
     });
   }
 

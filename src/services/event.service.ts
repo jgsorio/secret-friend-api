@@ -24,6 +24,8 @@ class EventService {
   }
 
   delete = async (id: string): Promise<Event> => {
+    await prisma.eventPeople.deleteMany({ where: { event_id: id }});
+    await prisma.eventGroup.deleteMany({ where: { event_id: id }})
     return await prisma.event.delete({ where: { id }});
   }
 
@@ -58,7 +60,7 @@ class EventService {
       await prisma.eventPeople.update({ where: { id: match.id }, data: { matched: match.match }});
       const people = await prisma.eventPeople.findFirst({ where: { id: match.id }});
       const peopleFriend = await prisma.eventPeople.findFirst({ where: { id: people.matched }});
-      await twillioAdapter.sendSms(people.phone, `Olá ${people.name}, tudo bem? Seu amigo secreto é ${peopleFriend.name}!`);
+      await twillioAdapter.sendSms('+55'+people.phone, `Olá ${people.name}, tudo bem?\nEvento: ${event.name}\nSeu amigo secreto é ${peopleFriend.name}!`);
     });
 
     return true;

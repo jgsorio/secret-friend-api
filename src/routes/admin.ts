@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, response, Response, Router } from 'express';
 import authController from '@/controllers/auth.controller';
 import { authenticated } from '@/middlewares/authenticated';
 import eventController from '@/controllers/event.controller';
@@ -6,6 +6,10 @@ import groupController from '@/controllers/group.controller';
 import peopleController from '@/controllers/people.controller';
 
 const router = Router();
+
+router.get('/ping', authenticated, (_: Request, res: Response) => {
+  return res.json({ 'pong': true });
+});
 
 router.post('/login', authController.login);
 router.get('/events', authenticated, eventController.all);

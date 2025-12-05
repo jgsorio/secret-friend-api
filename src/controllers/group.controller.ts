@@ -11,7 +11,7 @@ class GroupController {
 
   show: RequestHandler = async (request: Request, response: Response): Promise<any> => {
     const { eventId, id } = request.params;
-    const group = await groupService.show(id, eventId);
+    const group = await groupService.show(id);
     return response.json(group);
   }
 
